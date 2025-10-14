@@ -3,7 +3,8 @@ pipeline {
 
     environment {
         BACKEND_DIR = 'petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi'
-        IMAGE_NAME = 'petmanagement_backend:latest'
+        IMAGE_NAME = 'petmanagement_backend'
+        DOCKERHUB_USER = 'selvavignesh02'
     }
 
     stages {
@@ -24,7 +25,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 dir("${BACKEND_DIR}") {
-                  sh 'npm test || echo "No tests specified, skipping."'
+                    sh 'npm test || echo "No tests specified, skipping."'
                 }
             }
         }
@@ -32,7 +33,24 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir("${BACKEND_DIR}") {
-                    sh "docker build -t ${IMAGE_NAME} ."
+                    sh "docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:latest ."
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "Logging in to Docker Hub..."
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        
+                        echo "Pushing image to Docker Hub..."
+                        docker push ${DOCKER_USER}/${IMAGE_NAME}:latest
+                        
+                        echo "Logging out..."
+                        docker logout
+                    '''
                 }
             }
         }
@@ -40,10 +58,10 @@ pipeline {
 
     post {
         success {
-            echo "Backend build and Docker image creation successful."
+            echo "Docker image built and pushed successfully to Docker Hub."
         }
         failure {
-            echo "Pipeline failed. Check logs for details."
+            echo "Pipeline failed. Check Jenkins logs for details."
         }
     }
 }

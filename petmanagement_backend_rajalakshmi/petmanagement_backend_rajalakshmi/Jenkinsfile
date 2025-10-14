@@ -17,11 +17,14 @@ pipeline {
         }
 
 
-        stage('Run Unit Tests') {
+        stage('Run Backend Unit Tests') {
             steps {
-                sh 'npm test'
+                dir('petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi') {
+                    sh 'npm test'
+                }
             }
         }
+
 
     }
 

@@ -8,11 +8,14 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Backend Dependencies') {
             steps {
-                sh 'npm install'
+                dir('petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi') {
+                    sh 'npm install'
+                }
             }
         }
+
 
         stage('Run Unit Tests') {
             steps {

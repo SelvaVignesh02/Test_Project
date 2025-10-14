@@ -2,9 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = 'docker.io'
-        IMAGE_NAME = 'pet-finder-backend'
-        DOCKERHUB_CREDS = credentials('dockerhub-creds')
+
     }
 
     stages {

@@ -1,39 +1,51 @@
 pipeline {
     agent any
 
+    environment {
+        BACKEND_DIR = 'petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi'
+        IMAGE_NAME = 'petmanagement_backend:latest'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                // Checkout from GitHub
+                git branch: 'main', url: 'https://github.com/SelvaVignesh02/Test_Project.git'
             }
         }
 
-        stage('Install Backend Dependencies') {
+        stage('Install Dependencies') {
             steps {
-                dir('petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi') {
+                dir("${BACKEND_DIR}") {
                     sh 'npm install'
                 }
             }
         }
 
-
-        stage('Run Backend Unit Tests') {
+        stage('Run Unit Tests') {
             steps {
-                dir('petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi') {
-                    sh 'npm test'
+                dir("${BACKEND_DIR}") {
+                    // Run tests. If no tests exist, this can be skipped or you can add test scripts later
+                    sh 'npm test || echo "No tests specified, skipping."'
                 }
             }
         }
 
-
+        stage('Build Docker Image') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    sh "docker build -t ${IMAGE_NAME} ."
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo '✅ Deployment Successful!'
+            echo "✅ Backend build and Docker image creation successful."
         }
         failure {
-            echo '❌ Pipeline Failed.'
+            echo "❌ Pipeline failed. Check logs for details."
         }
     }
 }

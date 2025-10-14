@@ -9,7 +9,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout from GitHub
                 git branch: 'main', url: 'https://github.com/SelvaVignesh02/Test_Project.git'
             }
         }
@@ -25,8 +24,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 dir("${BACKEND_DIR}") {
-                    // Run tests. If no tests exist, this can be skipped or you can add test scripts later
-                    sh 'npm test || echo "No tests specified, skipping."'
+                  sh 'npm test || echo "No tests specified, skipping."'
                 }
             }
         }
@@ -42,10 +40,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Backend build and Docker image creation successful."
+            echo "Backend build and Docker image creation successful."
         }
         failure {
-            echo "❌ Pipeline failed. Check logs for details."
+            echo "Pipeline failed. Check logs for details."
         }
     }
 }

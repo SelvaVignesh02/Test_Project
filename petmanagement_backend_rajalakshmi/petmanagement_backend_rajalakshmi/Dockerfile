@@ -17,5 +17,5 @@ COPY . .
 EXPOSE 4200
 
 # Start the app
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]
 

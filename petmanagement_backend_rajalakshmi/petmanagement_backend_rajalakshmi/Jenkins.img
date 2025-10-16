@@ -4,7 +4,7 @@ pipeline {
 
     environment {
         BACKEND_DIR = 'petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi'
-        IMAGE_NAME = 'Image_optimized'
+        IMAGE_NAME = 'image-optimized'
         DOCKERHUB_USER = 'selvavignesh02'
     }
 
@@ -45,4 +45,3 @@ pipeline {
         }
     }
 }
-
